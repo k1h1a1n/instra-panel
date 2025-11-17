@@ -1,0 +1,4 @@
+{
+	"sync": "http://localhost:8002/remoteEntry.json",
+	"listing": "http://localhost:8001/remoteEntry.json"
+}
