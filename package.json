@@ -11,7 +11,7 @@
     "start:shell": "ng serve shell",
     "start:sync": "ng serve sync",
     "start:listing": "ng serve listing",
-    "start-all": "concurrently \"npm run start:shell\" \"npm run start:sync\" \"npm run start:listing\""
+    "start-all": "concurrently \"npm run start:sync\" \"npm run start:listing\"  \"npm run start:shell\""
   },
   "prettier": {
     "overrides": [
