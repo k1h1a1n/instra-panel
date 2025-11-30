@@ -8,4 +8,7 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('shell');
+  constructor() { 
+    console.log('App initialized , constructiort');
+  }
 }
