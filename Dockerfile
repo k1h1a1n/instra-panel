@@ -1,44 +1,44 @@
 # --------------------------------------------------
-# 1. Build Angular App using Node 22 Alpine
+# Stage 1: Build Angular App (Node Alpine)
 # --------------------------------------------------
 FROM node:22-alpine AS build
 
 WORKDIR /app
 
-# Copy package files
-# Copy essential config files FIRST
+# Copy only package files first (for better caching)
 COPY package.json package-lock.json ./
 COPY angular.json ./
 COPY tsconfig*.json ./
 
-
-# Install only required deps (clean + small)
+# Install deps (prod-only)
 RUN npm ci --omit=dev
 
-# Install Angular CLI locally (IMPORTANT)
+# Install Angular CLI (only for build)
 RUN npm install @angular/cli --save-dev
-# Copy all project files
+
+# Copy source code
 COPY . .
 
-# Build Angular for production
+# Build Angular app for production
 RUN npm run build:shell
 
-# Clean node_modules to reduce image size
-RUN rm -rf node_modules
+# Remove sourcemaps to shrink output
+RUN find dist/shell/browser -type f -name "*.map" -delete
 
 
 # --------------------------------------------------
-# 2. Serve Built App using NGINX Alpine
+# Stage 2: Final NGINX Image (VERY small)
 # --------------------------------------------------
-FROM nginx:alpine
+FROM nginx:stable-alpine-slim
 
-# Remove default nginx website
+
+# Remove default nginx page
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy Angular dist output into Nginx public folder
+# Copy Angular dist output
 COPY --from=build /app/dist/shell/browser /usr/share/nginx/html/
 
-# Custom Nginx SPA config
+# Copy Nginx SPA config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80

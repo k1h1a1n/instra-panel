@@ -1,5 +1,26 @@
+# Dependencies
 node_modules
-.git
+npm-debug.log
+yarn-error.log
+
+# Angular build
 dist
+tmp
+coverage
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# IDE / OS files
 .vscode
-.angular
+.idea
+*.swp
+.DS_Store
+
+# Environment files
+*.env
