@@ -2,6 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 export interface RuntimeConfig {
   apiBaseUrl?: string;
+  contentUrl?: string;
   [key: string]: any;
 }
 
@@ -31,8 +32,4 @@ export function initializeRuntimeConfig(): () => Promise<void> {
         (window as any).__RUNTIME_CONFIG__ = {};
       });
   };
-}
-
-export function runtimeConfigFactory(): RuntimeConfig {
-  return (window as any).__RUNTIME_CONFIG__ || { apiBaseUrl: '/api' };
 }
