@@ -1,4 +1,7 @@
 <div class="listing-root">
+	<lib-pulse-loader [isLoading]="loaderIsLoading()" message="Loading data..."></lib-pulse-loader>
+	<lib-error-toast [message]="loaderError()"></lib-error-toast>
+
 	<header class="listing-header">
 		<h1>Listing</h1>
 		<p class="subtitle">Choose a content type to manage</p>

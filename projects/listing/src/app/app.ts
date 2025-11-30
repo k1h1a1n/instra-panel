@@ -1,19 +1,23 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { map, of, switchMap, takeUntil, tap } from 'rxjs';
+import { map, of, switchMap, tap } from 'rxjs';
 import { IndexedDBService } from 'shared-lib';
 import { SharedApiService } from 'shared-lib';
+import { LoaderService, PulseLoaderComponent, ErrorToastComponent } from 'shared-lib';
 
 @Component({
   selector: 'listing-app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, PulseLoaderComponent, ErrorToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class ListingApp {
   private idbsvc = inject(IndexedDBService);
   private apiService = inject(SharedApiService);
+  private loaderService = inject(LoaderService);
   protected readonly title = signal('listing');
+  protected loaderIsLoading = this.loaderService.isLoading;
+  protected loaderError = this.loaderService.errorMessage;
 
   // Called when Day Greetings card is clicked
   async onDayGreetings(): Promise<void> {

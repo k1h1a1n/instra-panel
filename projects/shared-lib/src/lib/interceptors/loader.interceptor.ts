@@ -9,41 +9,42 @@ import { LoaderService } from '../services/loader';
  */
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
-  private loaderService = inject(LoaderService);
+    private loaderService = inject(LoaderService);
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.loaderService.show();
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        this.loaderService.show();
 
-    return next.handle(req).pipe(
-      finalize(() => {
-        this.loaderService.hide();
-      }),
-      catchError((error: HttpErrorResponse) => {
-        const errorMsg = error.error?.message || error.message || 'An error occurred';
-        console.error('[LoaderInterceptor] API error:', error);
-        this.loaderService.setError(errorMsg);
-        return throwError(() => error);
-      })
-    );
-  }
+        return next.handle(req).pipe(
+            finalize(() => {
+                this.loaderService.hide();
+            }),
+            catchError((error: HttpErrorResponse) => {
+                const errorMsg = error.error?.message || error.message || 'An error occurred';
+                console.error('[LoaderInterceptor] API error:', error);
+                this.loaderService.setError(errorMsg);
+                return throwError(() => error);
+            })
+        );
+    }
 }
 
 /**
  * Functional interceptor for use with provideHttpClient
  */
 export const loaderInterceptor: HttpInterceptorFn = (req, next) => {
-  const loaderService = inject(LoaderService);
-  loaderService.show();
+    console.log('[loaderInterceptor] Intercepted request to:', req.url);
+    const loaderService = inject(LoaderService);
+    loaderService.show();
 
-  return next(req).pipe(
-    finalize(() => {
-      loaderService.hide();
-    }),
-    catchError((error: HttpErrorResponse) => {
-      const errorMsg = error.error?.message || error.message || 'An error occurred';
-      console.error('[loaderInterceptor] API error:', error);
-      loaderService.setError(errorMsg);
-      return throwError(() => error);
-    })
-  );
+    return next(req).pipe(
+        finalize(() => {
+            loaderService.hide();
+        }),
+        catchError((error: HttpErrorResponse) => {
+            const errorMsg = error.error?.message || error.message || 'An error occurred';
+            console.error('[loaderInterceptor] API error:', error);
+            loaderService.setError(errorMsg);
+            return throwError(() => error);
+        })
+    );
 };
